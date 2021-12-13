@@ -1,7 +1,53 @@
+:root {
+  --highlight: #FF57B2;
+  --heading: #F8F8F8;
+  --background: #1A1D23;
+  --info: #BBBBBB;
+  --body: #D7D7D7;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-// TODO
+body {
+  background: var(--background);
+}
+
+body, input, textarea, select, button {
+  font: 400 1rem "Roboto", sans-serif;
+  font-size: 18px;
+
+}
+
+button {
+  cursor: pointer;
+}
+
+h1, h2, h3 {
+  color: var(--heading);
+}
+
+p, span, strong {
+  color: var(--body);
+}
+
+a {
+  color: var(--highlight);
+  text-decoration: none;
+}
+
+@media (max-width: 1080px) {
+  html {
+    font-size: 93.75%;
+  }
+}
+
+@media (max-width: 720px) {
+  html {
+    font-size: 87.5%;
+  }
+}
+
