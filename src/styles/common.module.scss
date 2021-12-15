@@ -1,1 +1,25 @@
-// TODO
+.mainContainer {
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.postDetails {
+  display: flex;
+  align-items: center;
+
+  gap: 1.5rem;
+  margin-top: 0.75rem;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .mainContainer {
+    padding: 0 1rem;
+  }
+}
