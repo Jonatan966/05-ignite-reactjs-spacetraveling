@@ -1,4 +1,5 @@
 import { FC, useState } from 'react';
+import Link from 'next/link';
 import { GetStaticProps } from 'next';
 import { FiCalendar, FiUser } from 'react-icons/fi';
 
@@ -40,45 +41,64 @@ function parsePrismicPost(post: Document): Post {
       author: post.data.author,
       subtitle: post.data.subtitle,
     },
-    first_publication_date: parseDate(post.first_publication_date),
+    first_publication_date: post.first_publication_date,
   };
 }
 
 export default function Home({
-  postsPagination: { next_page, results },
+  postsPagination: { next_page: initialNextPage, results },
 }: HomeProps): JSX.Element {
-  const [posts, setPosts] = useState(results);
-  const [nextPage, setNextPage] = useState(next_page);
+  const [{ results: posts, next_page: nextPage }, setPosts] = useState({
+    results: results.map(post => ({
+      ...post,
+      first_publication_date: parseDate(post.first_publication_date),
+    })),
+    next_page: initialNextPage,
+  });
+  const [isFetchingMorePosts, setIsFetchingMorePosts] = useState(false);
 
   const loadPostCard: FC<Post> = ({
     data: post,
     first_publication_date,
     uid,
   }) => (
-    <a href={`/post/${uid}`} className={styles.postCard} key={uid}>
-      <h2>{post.title}</h2>
-      <p>{post.subtitle}</p>
-      <div className={commonStyles.postDetails}>
-        <span>
-          <FiCalendar />
-          {first_publication_date}
-        </span>
-        <span>
-          <FiUser />
-          {post.author}
-        </span>
-      </div>
-    </a>
+    <Link href={`/post/${uid}`} key={uid}>
+      <a className={styles.postCard} key={uid}>
+        <h2>{post.title}</h2>
+        <p>{post.subtitle}</p>
+        <div className={commonStyles.postDetails}>
+          <span>
+            <FiCalendar />
+            {first_publication_date}
+          </span>
+          <span>
+            <FiUser />
+            {post.author}
+          </span>
+        </div>
+      </a>
+    </Link>
   );
 
   async function handleFetchPosts(): Promise<void> {
-    const postsResponse = await fetch(nextPage);
-    const fetchedPosts = (await postsResponse.json()) as ApiSearchResponse;
+    setIsFetchingMorePosts(true);
 
-    const parsedPosts = fetchedPosts.results.map<Post>(parsePrismicPost);
+    try {
+      const postsResponse = await fetch(nextPage);
+      const fetchedPosts = (await postsResponse.json()) as ApiSearchResponse;
 
-    setPosts([...posts, ...parsedPosts]);
-    setNextPage(fetchedPosts.next_page);
+      const parsedPosts = fetchedPosts.results.map<Post>(post => ({
+        ...parsePrismicPost(post),
+        first_publication_date: parseDate(post.first_publication_date),
+      }));
+
+      setPosts({
+        results: [...posts, ...parsedPosts],
+        next_page: fetchedPosts.next_page,
+      });
+    } finally {
+      setIsFetchingMorePosts(false);
+    }
   }
 
   return (
@@ -87,7 +107,7 @@ export default function Home({
       <main className={commonStyles.mainContainer}>
         <div>{posts.map(loadPostCard)}</div>
 
-        {nextPage && (
+        {nextPage && !isFetchingMorePosts && (
           <button
             type="button"
             className={styles.loadMorePosts}
@@ -95,6 +115,9 @@ export default function Home({
           >
             Carregar mais posts
           </button>
+        )}
+        {isFetchingMorePosts && (
+          <strong className={styles.loadMorePosts}>Carregando...</strong>
         )}
       </main>
     </>
