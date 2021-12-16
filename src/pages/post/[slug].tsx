@@ -3,14 +3,13 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import Prismic from '@prismicio/client';
 import { RichText } from 'prismic-dom';
 import Image from 'next/image';
-import { format } from 'date-fns';
-import ptBR from 'date-fns/locale/pt-BR';
 
 import { FiCalendar, FiUser } from 'react-icons/fi';
 import { getPrismicClient } from '../../services/prismic';
 
 import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
+import { parseDate } from '../../utils/parse-date';
 
 interface Post {
   first_publication_date: string | null;
@@ -108,17 +107,9 @@ export const getStaticProps: GetStaticProps<
     }
   );
 
-  const publicationDate = format(
-    new Date(first_publication_date),
-    'i LLL yyyy',
-    {
-      locale: ptBR,
-    }
-  );
-
   const parsedPost: Post = {
     data: post,
-    first_publication_date: publicationDate,
+    first_publication_date: parseDate(first_publication_date),
   };
 
   return {

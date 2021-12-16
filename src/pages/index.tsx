@@ -1,13 +1,12 @@
 import { FC, useState } from 'react';
 import { GetStaticProps } from 'next';
 import { FiCalendar, FiUser } from 'react-icons/fi';
-import { format } from 'date-fns';
-import ptBR from 'date-fns/locale/pt-BR';
 
 import Prismic from '@prismicio/client';
 import ApiSearchResponse from '@prismicio/client/types/ApiSearchResponse';
 import { Document } from '@prismicio/client/types/documents';
 
+import { parseDate } from '../utils/parse-date';
 import { getPrismicClient } from '../services/prismic';
 
 import commonStyles from '../styles/common.module.scss';
@@ -33,14 +32,6 @@ interface HomeProps {
 }
 
 function parsePrismicPost(post: Document): Post {
-  const publicationDate = format(
-    new Date(post.first_publication_date),
-    'i LLL yyyy',
-    {
-      locale: ptBR,
-    }
-  );
-
   return {
     uid: post.uid,
     data: {
@@ -48,7 +39,7 @@ function parsePrismicPost(post: Document): Post {
       author: post.data.author,
       subtitle: post.data.subtitle,
     },
-    first_publication_date: publicationDate,
+    first_publication_date: parseDate(post.first_publication_date),
   };
 }
 
