@@ -5,6 +5,7 @@ import { RichText } from 'prismic-dom';
 import Image from 'next/image';
 
 import { FiCalendar, FiUser } from 'react-icons/fi';
+import Head from '../../components/Head';
 import { getPrismicClient } from '../../services/prismic';
 
 import commonStyles from '../../styles/common.module.scss';
@@ -41,6 +42,7 @@ export default function Post({
 }: PostProps): JSX.Element {
   return (
     <>
+      <Head title={post.title} />
       <div className={styles.postImage}>
         <Image layout="fill" src={post.banner.url} objectFit="cover" />
       </div>

@@ -11,6 +11,7 @@ import { getPrismicClient } from '../services/prismic';
 
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
+import Head from '../components/Head';
 
 interface Post {
   uid?: string;
@@ -81,19 +82,22 @@ export default function Home({
   }
 
   return (
-    <main className={commonStyles.mainContainer}>
-      <div>{posts.map(loadPostCard)}</div>
+    <>
+      <Head title="Início" />
+      <main className={commonStyles.mainContainer}>
+        <div>{posts.map(loadPostCard)}</div>
 
-      {nextPage && (
-        <button
-          type="button"
-          className={styles.loadMorePosts}
-          onClick={handleFetchPosts}
-        >
-          Carregar mais posts
-        </button>
-      )}
-    </main>
+        {nextPage && (
+          <button
+            type="button"
+            className={styles.loadMorePosts}
+            onClick={handleFetchPosts}
+          >
+            Carregar mais posts
+          </button>
+        )}
+      </main>
+    </>
   );
 }
 
