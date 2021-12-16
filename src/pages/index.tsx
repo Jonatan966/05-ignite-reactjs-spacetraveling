@@ -63,7 +63,7 @@ export default function Home({
     first_publication_date,
     uid,
   }) => (
-    <a href={`/posts/${uid}`} className={styles.postCard} key={uid}>
+    <a href={`/post/${uid}`} className={styles.postCard} key={uid}>
       <h2>{post.title}</h2>
       <p>{post.subtitle}</p>
       <div className={commonStyles.postDetails}>
