@@ -7,6 +7,7 @@
 .postDetails {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 
   gap: 1.5rem;
   margin-top: 0.75rem;
@@ -20,6 +21,6 @@
 
 @media (max-width: 720px) {
   .mainContainer {
-    padding: 0 1rem;
+    padding: 0 2rem;
   }
 }
