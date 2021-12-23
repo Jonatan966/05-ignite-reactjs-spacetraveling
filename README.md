@@ -13,6 +13,7 @@ Este desafio consiste em criar um blog do zero
 - Prismic CMS
 - React Icons
 - date-fns
+- utterances
 
 ## 💻 Aplicação
 ![Spacetraveling](./.github/spacetraveling.gif)
