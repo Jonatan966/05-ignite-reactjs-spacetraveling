@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { FiCalendar, FiClock, FiUser } from 'react-icons/fi';
 
 import Head from '../../components/Head';
+import Comments from '../../components/Comments';
 import { getPrismicClient } from '../../services/prismic';
 import { parseDate } from '../../utils/parse-date';
 
@@ -99,6 +100,9 @@ export default function Post({ post }: PostProps): JSX.Element {
             />
           </section>
         ))}
+
+        <hr />
+        <Comments />
       </article>
     </>
   );
