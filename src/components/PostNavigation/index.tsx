@@ -64,8 +64,8 @@ export default function PostNavigation({
 }: PostNavigationProps): JSX.Element {
   return (
     <section className={styles.postNavigationContainer}>
-      {renderOtherPost(next, 'Post anterior')}
-      {renderOtherPost(previous, 'Próximo post')}
+      {renderOtherPost(previous, 'Post anterior')}
+      {renderOtherPost(next, 'Próximo post')}
     </section>
   );
 }
