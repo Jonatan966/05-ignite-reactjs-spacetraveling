@@ -22,6 +22,7 @@ import PostNavigation, {
 
 interface Post {
   first_publication_date: string | null;
+  last_publication_date: string | null;
   uid: string;
   data: {
     title: string;
@@ -100,6 +101,12 @@ export default function Post({
           </span>
         </div>
 
+        {post.last_publication_date && (
+          <i className={styles.lastPublication}>
+            * editado em {parseDate(post.last_publication_date, true)}
+          </i>
+        )}
+
         {data.content.map(postContent => (
           <section className={styles.postSection} key={postContent.heading}>
             <h2>{postContent.heading}</h2>
@@ -155,6 +162,7 @@ export const getStaticProps: GetStaticProps<PostProps, PageRoute> = async ({
     const {
       data: post,
       first_publication_date,
+      last_publication_date,
       uid,
       id,
     } = await prismic.getByUID('posts', String(params.slug), {
@@ -166,6 +174,10 @@ export const getStaticProps: GetStaticProps<PostProps, PageRoute> = async ({
       data: post,
       uid,
       first_publication_date,
+      last_publication_date:
+        first_publication_date !== last_publication_date
+          ? last_publication_date
+          : null,
     };
 
     const navigation = {
