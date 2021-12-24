@@ -16,14 +16,22 @@ interface PostNavigationProps {
   previous?: OtherPost;
 }
 
-function renderOtherPost(post?: OtherPost, label = ''): JSX.Element {
+function renderOtherPost(
+  post?: OtherPost,
+  label = '',
+  textAlign: 'start' | 'end' = 'start'
+): JSX.Element {
   if (!post) {
     return <div />;
   }
 
   return (
     <Link href={`/post/${post.uid}`}>
-      <a>
+      <a
+        style={{
+          textAlign,
+        }}
+      >
         <span>{post.data.title}</span>
         <strong>{label}</strong>
       </a>
@@ -65,7 +73,7 @@ export default function PostNavigation({
   return (
     <section className={styles.postNavigationContainer}>
       {renderOtherPost(previous, 'Post anterior')}
-      {renderOtherPost(next, 'Próximo post')}
+      {renderOtherPost(next, 'Próximo post', 'end')}
     </section>
   );
 }
