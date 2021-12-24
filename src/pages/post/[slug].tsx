@@ -16,6 +16,9 @@ import { parseDate } from '../../utils/parse-date';
 import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
 import ExitPreview from '../../components/ExitPreview';
+import PostNavigation, {
+  fetchOtherPost,
+} from '../../components/PostNavigation';
 
 interface Post {
   first_publication_date: string | null;
@@ -38,13 +41,18 @@ interface Post {
 interface PostProps {
   post: Post;
   preview: boolean;
+  navigation: Parameters<typeof PostNavigation>[0];
 }
 
 type PageRoute = {
   slug: string;
 };
 
-export default function Post({ post, preview }: PostProps): JSX.Element {
+export default function Post({
+  post,
+  preview,
+  navigation,
+}: PostProps): JSX.Element {
   const { isFallback } = useRouter();
   const readTime = useMemo(() => {
     if (isFallback) {
@@ -104,6 +112,9 @@ export default function Post({ post, preview }: PostProps): JSX.Element {
         ))}
 
         <hr />
+
+        <PostNavigation {...navigation} />
+
         {!preview && <Comments />}
       </article>
 
@@ -145,6 +156,7 @@ export const getStaticProps: GetStaticProps<PostProps, PageRoute> = async ({
       data: post,
       first_publication_date,
       uid,
+      id,
     } = await prismic.getByUID('posts', String(params.slug), {
       fetch: ['posts.title', 'posts.banner', 'posts.author', 'posts.content'],
       ref: previewData?.ref ?? null,
@@ -156,10 +168,16 @@ export const getStaticProps: GetStaticProps<PostProps, PageRoute> = async ({
       first_publication_date,
     };
 
+    const navigation = {
+      next: await fetchOtherPost(id),
+      previous: await fetchOtherPost(id, 'desc'),
+    };
+
     return {
       props: {
         post: parsedPost,
         preview,
+        navigation,
       },
       revalidate: 60 * 60 * 12, // 12 hours
     };
